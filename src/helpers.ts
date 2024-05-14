@@ -22,7 +22,7 @@ export function hexToBuffer(data: string) {
 	return Buffer.from(rawHex);
 }
 
-export function zedPadBuffer(buffer: Buffer, length: number): Buffer {
+export function zeroPadBuffer(buffer: Buffer, length: number): Buffer {
 	if (buffer.length >= length) {
 		return buffer;
 	}

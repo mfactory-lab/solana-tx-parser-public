@@ -64,7 +64,7 @@ import {
 	flattenTransactionResponse,
 	parsedInstructionToInstruction,
 	parseTransactionAccounts,
-	zedPadBuffer,
+	zeroPadBuffer,
 } from "./helpers";
 
 function decodeSystemInstruction(instruction: TransactionInstruction): ParsedInstruction<SystemProgramIdl> {
@@ -258,7 +258,7 @@ function decodeTokenInstruction(instruction: TransactionInstruction, programId?:
 			const decodedIx = decodeInitializeMintInstruction(
 				{
 					...instruction,
-					data: zedPadBuffer(instruction.data, initializeMintInstructionData.span),
+					data: zeroPadBuffer(instruction.data, initializeMintInstructionData.span),
 				},
 				programId,
 			);
