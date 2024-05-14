@@ -41,6 +41,7 @@ import {
 import { BN, BorshInstructionCoder, Idl, SystemProgram as SystemProgramIdl } from "@coral-xyz/anchor";
 import { blob, struct, u8 } from "@solana/buffer-layout";
 import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
+import { initializeMintInstructionData } from "@solana/spl-token";
 
 import {
 	AssociatedTokenProgramIdlLike,
@@ -58,7 +59,13 @@ import {
 	SplToken,
 	UnknownInstruction,
 } from "./interfaces";
-import { compiledInstructionToInstruction, flattenTransactionResponse, parsedInstructionToInstruction, parseTransactionAccounts } from "./helpers";
+import {
+	compiledInstructionToInstruction,
+	flattenTransactionResponse,
+	parsedInstructionToInstruction,
+	parseTransactionAccounts,
+	zedPadBuffer,
+} from "./helpers";
 
 function decodeSystemInstruction(instruction: TransactionInstruction): ParsedInstruction<SystemProgramIdl> {
 	const ixType = SystemInstruction.decodeInstructionType(instruction);
@@ -248,7 +255,13 @@ function decodeTokenInstruction(instruction: TransactionInstruction, programId?:
 
 	switch (decoded) {
 		case TokenInstruction.InitializeMint: {
-			const decodedIx = decodeInitializeMintInstruction(instruction, programId);
+			const decodedIx = decodeInitializeMintInstruction(
+				{
+					...instruction,
+					data: zedPadBuffer(instruction.data, initializeMintInstructionData.span),
+				},
+				programId,
+			);
 			parsed = {
 				name: "initializeMint",
 				accounts: [

@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 import { utils } from "@coral-xyz/anchor";
 import {
 	AccountMeta,
@@ -18,6 +20,16 @@ export function hexToBuffer(data: string) {
 	const rawHex = data.startsWith("0x") ? data.slice(2) : data;
 
 	return Buffer.from(rawHex);
+}
+
+export function zedPadBuffer(buffer: Buffer, length: number): Buffer {
+	if (buffer.length >= length) {
+		return buffer;
+	}
+	const paddedBuffer = Buffer.alloc(length);
+	buffer.copy(paddedBuffer);
+
+	return paddedBuffer;
 }
 
 /**
